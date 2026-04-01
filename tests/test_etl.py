@@ -1,27 +1,35 @@
-"""Tests for the ETL pipeline.
-
-Write at least 3 tests:
-1. test_transform_filters_cancelled — cancelled orders excluded after transform
-2. test_transform_filters_suspicious_quantity — quantities > 100 excluded
-3. test_validate_catches_nulls — validate() raises ValueError on null customer_id
-"""
-import pandas as pd
 import pytest
-
+import pandas as pd
+from etl_pipeline import transform, validate
 
 def test_transform_filters_cancelled():
-    """Create test DataFrames with a cancelled order. Confirm it's excluded."""
-    # TODO: Implement
-    pass
-
+    
+    data = {
+        "customers": pd.DataFrame({'customer_id': [1], 'customer_name': ['Ali']}),
+        "products": pd.DataFrame({'product_id': [101], 'category': ['Tech'], 'unit_price': [100]}),
+        "orders": pd.DataFrame({'order_id': [1, 2], 'customer_id': [1, 1], 'status': ['completed', 'cancelled']}),
+        "order_items": pd.DataFrame({'order_id': [1, 2], 'product_id': [101, 101], 'quantity': [1, 1]})
+    }
+    result = transform(data)
+    assert result.iloc[0]['total_orders'] == 1
 
 def test_transform_filters_suspicious_quantity():
-    """Create test DataFrames with quantity > 100. Confirm it's excluded."""
-    # TODO: Implement
-    pass
-
+    data = {
+        "customers": pd.DataFrame({'customer_id': [1], 'customer_name': ['Ali']}),
+        "products": pd.DataFrame({'product_id': [101], 'category': ['Tech'], 'unit_price': [10]}),
+        "orders": pd.DataFrame({'order_id': [1], 'customer_id': [1], 'status': ['completed']}),
+        "order_items": pd.DataFrame({'order_id': [1], 'product_id': [101], 'quantity': [101]}) # كمية مشبوهة
+    }
+    result = transform(data)
+    
+    assert len(result) == 0
 
 def test_validate_catches_nulls():
-    """Create a DataFrame with null customer_id. Confirm validate() raises ValueError."""
-    # TODO: Implement
-    pass
+    df_with_null = pd.DataFrame({
+        'customer_id': [None], 
+        'customer_name': ['Unknown'],
+        'total_orders': [1],
+        'total_revenue': [100]
+    })
+    with pytest.raises(ValueError, match="No Null IDs/Names"):
+        validate(df_with_null)
