@@ -1,6 +1,9 @@
 -- Amman Digital Market — Database Schema
 -- Module 3 Integration Task: ETL Pipeline
-
+DROP TABLE IF EXISTS order_items CASCADE;
+DROP TABLE IF EXISTS orders CASCADE;
+DROP TABLE IF EXISTS products CASCADE;
+DROP TABLE IF EXISTS customers CASCADE;
 CREATE TABLE customers (
     customer_id    SERIAL PRIMARY KEY,
     customer_name  VARCHAR(100) NOT NULL,

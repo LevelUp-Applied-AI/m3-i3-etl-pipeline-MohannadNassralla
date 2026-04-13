@@ -35,6 +35,21 @@ python etl_pipeline.py
 ## Quality Checks
 
 <!-- What validations are performed and why? -->
+The pipeline produces:
+
+PostgreSQL table: customer_analytics
+CSV file: output/customer_analytics.csv
+
+Columns in the customer summary:
+
+| Column          | Description                                   |
+| --------------- | --------------------------------------------- |
+| customer_id     | Unique identifier of the customer             |
+| customer_name   | Customer name                                 |
+| total_orders    | Count of distinct orders                      |
+| total_revenue   | Sum of line totals for all orders             |
+| avg_order_value | Average value per order                       |
+| top_category    | Most profitable product category per customer |
 
 ---
 
